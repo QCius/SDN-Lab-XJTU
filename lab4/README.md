@@ -167,7 +167,6 @@ if(ecCount == 0)
   		fprintf(fp, "[VeriFlow::traverseForwardingGraph] Found a LOOP for the following packet class at node %s.\n", currentLocation.c_str());
   		fprintf(fp, "[VeriFlow::traverseForwardingGraph] PacketClass: %s\n", packetClass.toString().c_str());
   		fprintf(fp, "[VeriFlow::traverseForwardingGraph] LOOP path:\n");
-  		int print_flag = 0; // There are two current positions
   		for(unsigned int i = 0; i < path.size(); i++) {
   			fprintf(fp, "%s --> ", path[i].c_str());
   		}
