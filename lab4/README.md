@@ -89,7 +89,7 @@ sudo python waypoint_path.py
 
 **对每条验证的规则，实验要求输出这条规则所影响的EC数目**  
 
-对VeriFlow.cpp中的`VeriFlow::verifyRule`函数作修改，打印等价类数量即可
+对VeriFlow.cpp中的`verifyRule`函数作修改，打印等价类数量即可
 
 修改前:
 
@@ -152,11 +152,11 @@ if(ecCount == 0)
   bool traverseForwardingGraph(const EquivalenceClass& packetClass, ForwardingGraph* graph, const string& currentLocation, const string& lastHop, unordered_set < string > visited, FILE* fp,vector<string>& path);
   ```
 
-- 在VeriFlow.cpp中的`VeriFlow::verifyRule`函数中创建`path`表（`visited`表创建处）
+- 在VeriFlow.cpp中的`verifyRule`函数中创建`path`表（`visited`表创建处）
 
 - 在VeriFlow.cpp中修改`traverseForwardingGraph`函数的调用（共两处）
 
-- 在VeriFlow.cpp中的`VeriFlow::traverseForwardingGraph`函数定义处作修改，并加入记录和输出环路信息的代码
+- 在VeriFlow.cpp中的`traverseForwardingGraph`函数定义处作修改，并加入记录和输出环路信息的代码
 
   ```cpp
   ...
@@ -237,7 +237,7 @@ git diff HEAD origin/HEAD
 
 2. 环路检测优化和黑洞检测优化
 
-在原代码中，`itr`是固定不变的(第一项)，因此只能判定环路而无法记录环路的全部信息。为了记录环路的全部信息需要`itr`是变化的，补充的代码实现了这一点。在加入`in_port`之后，就可以引入上一跳`lastHop`，从而设置过滤条件。
+在原代码中，`itr`是固定不变的(第一项)，因此只能判定环路而无法记录环路的全部信息。为了记录环路的全部信息需要`itr`是变化的，补充的代码实现了这一点。在加入`in_port`之后，就可以引入`lastHop`，从而设置过滤条件。
 
 网络黑洞是指在网络路径中，数据包被路由到一个无法到达目的地的位置，并且这些数据包在到达该位置后被丢弃或消失。在网络黑洞中，数据包被“吸收”而不会被转发到其他节点，导致数据无法正常传输。网络黑洞可能由配置错误、设备故障或恶意攻击等原因引起。
 
@@ -251,13 +251,11 @@ git diff HEAD origin/HEAD
 
 - 检查 `lastHop` 是否为 `NULL` 或 `itr->rule.in_port` 是否为 `65536`，这两种情况下直接跳过处理。
 
-- 否则，遍历 `linkList`，查找与 `lastHop` 匹配的连接（此处还避免了下一跳与上一跳相同）。
+- 否则，遍历 `linkList`，查找与 `lastHop` 匹配的连接。
 
 - 如果 `itr` 到达 `linkList` 的末尾`linkList.end()`，表示没有找到与 `lastHop` 匹配的连接。
 
-- 这意味着当前节点没有任何有效的出边，可以视为一个网络黑洞。
-
-- 检测到黑洞后，记录相关信息。
+- 这意味着当前节点没有任何有效的出边，可以视为一个网络黑洞，记录相关信息。
 
   
 
